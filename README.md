@@ -7,7 +7,7 @@ Displays the cost of a set of call records stored in a file.
 To run the application use the following command in the application's folder:
 
 ```bash
-$ bin/billing <path-to-file>.
+$ bin/billing <path-to-file>
 ```
 
 Replace `<path-to-file>` with the path to a file in the following [format](#file-format).
@@ -36,7 +36,7 @@ For example, consider the following `sample.csv` file:
 **Note**:
 * A call between `23:59:00` and `01:00:00` means that the call lasted 2 minutes.
 * Both `time_of_start` and `time_of_finish` are in the same timezone.
-* The following phone numbers are considered different: `+351911234567`, `00351911234567`, and `911 234 567`.
+* The following phone numbers are considered different: `+351911234567`, `00351911234567`, and `911234567`.
 
 ### Configuration
 
