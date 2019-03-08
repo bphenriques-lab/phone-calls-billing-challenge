@@ -1,19 +1,24 @@
-.PHONY: all clean lint package test
+.PHONY: all clean compile lint test package
 
-all: clean test package
+all: clean compile lint test package
 
 # Cleans the project.
 clean:
 	sbt clean
 
+# Compiles the project
+compile:
+	sbt compile
+
 # Runs Scala linter.
 lint:
 	sbt scalastyle
 
+# Unit tests.
+test:
+	sbt test
+
 # Generates a distributable ZIP file under target/universal/*.zip
-package:
+package: clean
 	sbt universal:packageBin
 
-# Unit tests.
-test: clean
-	sbt test

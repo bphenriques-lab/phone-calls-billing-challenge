@@ -53,10 +53,9 @@ csv {
  
 Where:
 * `cost-format`: How the bill cost should be formatted. This uses the [DecimalFormat](https://docs.oracle.com/javase/tutorial/i18n/format/decimalFormat.html).
-  Defaults to `0.00`.
 * `csv`: The configuration object of the `CSV` reader.
-  * `separator`: If the CSV file contains an header. Defaults to `;`.
-  * `header`: If the CSV file contains an header. Defaults to `false`.
+  * `separator`: If the CSV file contains an header.
+  * `header`: If the CSV file contains an header.
 
 
 ## Billing 

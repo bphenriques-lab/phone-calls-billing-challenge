@@ -24,10 +24,18 @@ $ make compile
 
 ### Run the linter
 
-The following command runs the scala linter:
+The following command runs the scala linter (see [scalastyle](http://www.scalastyle.org/)):
 
 ```
 $ make lint
+```
+
+### Run Unit Tests
+
+The following command runs the unit tests:
+
+```
+$ make test
 ```
 
 ### Packaging
@@ -40,14 +48,6 @@ $ make package
 ```
 
 Please follow the [installation guide](#installing) with instructions on how deploy the application.
-
-### Run Unit Tests
-
-The following command runs the unit tests:
-
-```
-$ make test
-```
 
 ### Publish
 
@@ -76,23 +76,22 @@ def from(file: File): Try[Seq[CallRecord]]
 
 There are two extension points regarding billing:
 
-1. **Individual calls**: Use the trait `CallBillGenerator` and implement the following method:
+* **Individual calls**: Use the trait `CallBillGenerator` and implement the following method:
 
     ```
     def createBill(value: CallRecord): Bill
     ```
 
-
-2: **Set of calls**: Use the trait `SeqCallsBillGenerator` and implement the following method:
+* **Set of calls**: Use the trait `SeqCallsBillGenerator` and implement the following method:
 
     ```
-    def createBill(value: Seq[CallRecord]): Bill
+    def createBill(value: Seq[CallRecord]): Bill    
     ```
 
 `Bill` as the name suggests, groups the relevant billing information which is the duration of the call and the amount
 that is going to billed.
 
-**Note**: Currently, there is no support on any of these strategy through the configuration file.
+**Note**: Currently, there is no support to change any of these strategy through the configuration file.
 
 #### Feature Requests and bug reports
 
