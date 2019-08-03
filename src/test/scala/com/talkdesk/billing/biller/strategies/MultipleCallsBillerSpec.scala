@@ -2,7 +2,7 @@
  * © Copyright 2019 Bruno Henriques
  */
 
-package com.talkdesk.billing.manager.generator
+package com.talkdesk.billing.biller.strategies
 
 import java.io.File
 
@@ -13,14 +13,14 @@ import org.scalatest.prop.TableFor2
 import scala.io.Source
 
 /**
-  * Tests [[com.talkdesk.billing.manager.generator.BaseSeqCallsBillGenerator]].
+  * Tests [[MultipleCallsBiller]].
   */
-class SeqCallsBillGeneratorSpec extends BaseSpec {
+class MultipleCallsBillerSpec extends BaseSpec {
 
   /**
     * Target instance to test.
     */
-  private val callRecordsManager = new BaseSeqCallsBillGenerator(new BaseCallBillGenerator)
+  private val callRecordsManager = new MultipleCallsBiller(new SingleCallBiller)
 
   /**
     * The input files.

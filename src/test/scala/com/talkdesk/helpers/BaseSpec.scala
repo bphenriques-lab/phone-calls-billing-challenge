@@ -5,10 +5,10 @@
 package com.talkdesk.helpers
 
 import java.io.File
+import java.text.DecimalFormat
 import java.time.{LocalDate, LocalDateTime, LocalTime}
 
-import com.talkdesk.billing.manager.Types.CostFormat
-import com.talkdesk.billing.manager.{Bill, Types}
+import com.talkdesk.billing.model.Bill
 import com.talkdesk.billing.supplier.CallRecordsFileSupplier
 import com.talkdesk.billing.supplier.csv.{CSVCallRecordsFileSupplier, CSVCallRecordsFileSupplierConfig}
 import org.scalatest.{FlatSpec, Matchers}
@@ -19,9 +19,9 @@ import org.scalatest.{FlatSpec, Matchers}
 class BaseSpec extends FlatSpec with Matchers {
 
   /**
-    * Default representation of [[Types.Cost]].
+    * Default format.
     */
-  val DefaultCostFormat: CostFormat = Bill.DefaultFormat
+  val DefaultCostFormat: DecimalFormat = Bill.DefaultFormat
 
   /**
     * Default [[com.talkdesk.billing.supplier.CallRecordsFileSupplier]].

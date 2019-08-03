@@ -2,16 +2,16 @@
  * © Copyright 2019 Bruno Henriques
  */
 
-package com.talkdesk.billing.manager
+package com.talkdesk.billing.model
 
+import java.text.DecimalFormat
 import java.time.Duration
 
-import com.talkdesk.billing.manager.Types.{Cost, CostFormat}
 import com.talkdesk.helpers.BaseSpec
 import org.scalatest.prop.TableDrivenPropertyChecks._
 
 /**
-  * Tests [[com.talkdesk.billing.manager.Bill]].
+  * Tests [[Bill]].
   */
 class BillSpec extends BaseSpec {
 
@@ -22,7 +22,7 @@ class BillSpec extends BaseSpec {
       (Duration.ZERO,               BigDecimal(-1)) // Negative cost.
     )
 
-    forAll (rows) { (duration: Duration, cost: Cost) =>
+    forAll (rows) { (duration: Duration, cost: BigDecimal) =>
       assertThrows[Exception] {
         Bill(duration, cost)
       }
@@ -44,7 +44,7 @@ class BillSpec extends BaseSpec {
       (Duration.ZERO.plusSeconds(1),  BigDecimal(2)), // Average case.
     )
 
-    forAll (rows) { (duration: Duration, cost: Cost) =>
+    forAll (rows) { (duration: Duration, cost: BigDecimal) =>
       val bill = Bill(duration, cost)
 
       bill.duration shouldEqual duration
@@ -75,10 +75,10 @@ class BillSpec extends BaseSpec {
       ("Bill", "Format", "Expected String"),
       (Bill(Duration.ofMinutes(1), 1),          Bill.DefaultFormat,          "1.00"),
       (Bill(Duration.ofMinutes(1), 1001024.32), Bill.DefaultFormat,          "1001024.32"),
-      (Bill(Duration.ofMinutes(1), 1001024.32), new CostFormat("###,##0.00"), "1,001,024.32")
+      (Bill(Duration.ofMinutes(1), 1001024.32), new DecimalFormat("###,##0.00"), "1,001,024.32")
     )
 
-    forAll (rows) { (bill: Bill, format: CostFormat, expected: String) =>
+    forAll (rows) { (bill: Bill, format: DecimalFormat, expected: String) =>
       bill.format(format) shouldEqual expected
     }
   }

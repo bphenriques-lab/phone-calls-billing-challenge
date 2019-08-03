@@ -54,7 +54,7 @@ trait Application {
       config <- ConfigFactory.load().read[AppConfig](AppConfig.fromConfig).toEither
       records <- config.callRecordsSupplier.from(new File(filename)).toEither
     } yield {
-      val bill = config.billGenerator.createBill(records)
+      val bill = config.biller.createBill(records)
       println(bill.format(config.costFormat))
     }) match {
       case Left(error) => throw error

@@ -2,18 +2,20 @@
  * © Copyright 2019 Bruno Henriques
  */
 
-package com.talkdesk.billing.manager.generator
+package com.talkdesk.billing.biller.strategies
 
-import com.talkdesk.billing.manager.{Bill, CallBillGenerator, SeqCallsBillGenerator}
-import com.talkdesk.billing.model.{CallRecord, Contact}
+import com.talkdesk.billing.biller.Biller
+import com.talkdesk.billing.model.{Bill, CallRecord, Contact}
 import com.typesafe.scalalogging.LazyLogging
 
 /**
-  * Generates [[com.talkdesk.billing.manager.Bill]] given a set of [[com.talkdesk.billing.model.CallRecord]].
+  * Generates [[Bill]] given a set of [[com.talkdesk.billing.model.CallRecord]].
   *
   * @param callPricing The strategy used to bill [[com.talkdesk.billing.model.CallRecord]].
   */
-final class BaseSeqCallsBillGenerator(callPricing: CallBillGenerator) extends SeqCallsBillGenerator with LazyLogging {
+final class MultipleCallsBiller(
+  callPricing: Biller[CallRecord]
+) extends Biller[Seq[CallRecord]] with LazyLogging {
 
   /**
     * Processes the cost of a set of [[com.talkdesk.billing.model.CallRecord]] transcribed in the file.
@@ -35,7 +37,6 @@ final class BaseSeqCallsBillGenerator(callPricing: CallBillGenerator) extends Se
       val (callerWithGreatestDuration, callerBill) = callerToBill
         .maxBy { case (_, bill) => bill.duration }
       logger.debug(s"${callerWithGreatestDuration.phoneNumber} will not be charged $callerBill.")
-
 
       // Removing the caller with the highest total call duration so that he is not charged.
       logger.info("Creating the final bill...")

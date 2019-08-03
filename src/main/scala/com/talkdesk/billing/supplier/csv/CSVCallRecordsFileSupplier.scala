@@ -58,12 +58,7 @@ final class CSVCallRecordsFileSupplier(config: CSVCallRecordsFileSupplierConfig)
         case time                             => LocalDateTime.of(ReferenceDay, time)
       }
 
-      CallRecord(
-        startDateTime,
-        endDateTime,
-        Contact(from.trim),
-        Contact(to.trim)
-      )
+      CallRecord(startDateTime, endDateTime, Contact(from.trim), Contact(to.trim))
     }
   }
 

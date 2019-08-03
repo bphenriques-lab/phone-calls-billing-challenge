@@ -2,34 +2,33 @@
  * © Copyright 2019 Bruno Henriques
  */
 
-package com.talkdesk.billing.manager.generator
+package com.talkdesk.billing.biller.strategies
 
 import java.time.Duration
 
-import com.talkdesk.billing.manager.Types.Cost
 import com.talkdesk.billing.model.{CallRecord, Contact}
 import com.talkdesk.helpers.BaseSpec
 import org.scalatest.prop.TableDrivenPropertyChecks._
 
 /**
-  * Tests [[com.talkdesk.billing.manager.generator.BaseCallBillGenerator]].
+  * Tests [[SingleCallBiller]].
   */
-class BaseCallBillGeneratorSpec extends BaseSpec {
+class SingleCallBillerSpec extends BaseSpec {
 
   /**
     * Target instance to test.
     */
-  private val callPricing = new BaseCallBillGenerator()
+  private val callPricing = new SingleCallBiller()
 
   /**
     * Price per minute during the first 5 minutes of the call (4:59).
     */
-  private val PRICE_PER_MINUTE_FIRST_5_MIN = BaseCallBillGenerator.PriceRange(Duration.ofMinutes(5).minusSeconds(1))
+  private val PRICE_PER_MINUTE_FIRST_5_MIN = SingleCallBiller.PriceRange(Duration.ofMinutes(5).minusSeconds(1))
 
   /**
     * Price per minute after 5 minutes (5:00)
     */
-  private val PRICE_PER_MINUTE_AFTER_5_MIN = BaseCallBillGenerator.PriceRange(Duration.ofMinutes(5))
+  private val PRICE_PER_MINUTE_AFTER_5_MIN = SingleCallBiller.PriceRange(Duration.ofMinutes(5))
 
   /**
     * Creates a sample [[com.talkdesk.billing.model.CallRecord]]. The call will start at noon and will be from "A" to "B".
@@ -64,7 +63,7 @@ class BaseCallBillGeneratorSpec extends BaseSpec {
       (callRecord(Duration.ofMinutes(10)), 5 * PRICE_PER_MINUTE_FIRST_5_MIN + 6 * PRICE_PER_MINUTE_AFTER_5_MIN),
     )
 
-    forAll(calls) { (callRecord: CallRecord, expectedCost: Cost) =>
+    forAll(calls) { (callRecord: CallRecord, expectedCost: BigDecimal) =>
       callPricing.createBill(callRecord).cost shouldEqual expectedCost
     }
   }

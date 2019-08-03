@@ -2,11 +2,10 @@
  * © Copyright 2019 Bruno Henriques
  */
 
-package com.talkdesk.billing.manager
+package com.talkdesk.billing.model
 
+import java.text.DecimalFormat
 import java.time.Duration
-
-import com.talkdesk.billing.manager.Types.{Cost, CostFormat}
 
 /**
   * Represents the bill of one or several phone calls.
@@ -14,12 +13,12 @@ import com.talkdesk.billing.manager.Types.{Cost, CostFormat}
   * @param duration The total duration of the billable calls.
   * @param cost     The total cost of this bill.
   */
-sealed case class Bill(duration: Duration, cost: Cost) {
+sealed case class Bill(duration: Duration, cost: BigDecimal) {
   require(!duration.isNegative, "A bill has always a non-negative duration.")
   require(cost >= 0, "A bill has always a non-negative cost.")
 
   /**
-    * Creates a new [[com.talkdesk.billing.manager.Bill]] given another [[com.talkdesk.billing.manager.Bill]].
+    * Creates a new [[Bill]] given another [[Bill]].
     *
     * @param other The other bill.
     * @return The current bill with the new record.
@@ -30,12 +29,12 @@ sealed case class Bill(duration: Duration, cost: Cost) {
   )
 
   /**
-    * Returns the String representation of the Bill using the provided [[Types.CostFormat]].
+    * Returns the String representation of the Bill.
     *
     * @param format The format.
     * @return This bill formatted.
     */
-  def format(format: CostFormat): String = format.format(cost)
+  def format(format: DecimalFormat): String = format.format(cost)
 
   /**
     * @inheritdoc
@@ -44,17 +43,17 @@ sealed case class Bill(duration: Duration, cost: Cost) {
 }
 
 /**
-  * Companion object of [[com.talkdesk.billing.manager.Bill]].
+  * Companion object of [[Bill]].
   */
 object Bill {
 
   /**
-    * Default representation of [[Types.Cost]].
+    * Default formater.
     */
-  val DefaultFormat: CostFormat = new CostFormat("0.00")
+  val DefaultFormat: DecimalFormat = new DecimalFormat("0.00")
 
   /**
-    * Creates an empty [[com.talkdesk.billing.manager.Bill]].
+    * Creates an empty [[Bill]].
     *
     * @return Empty bill.
     */
