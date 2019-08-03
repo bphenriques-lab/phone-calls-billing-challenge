@@ -31,17 +31,15 @@ final class MultipleCallsBiller(
       val callerToBill: Map[Contact, Bill] = records
         .groupBy(_.from)
         .mapValues(_.map(callPricing.createBill))
-        .mapValues(_.foldLeft(Bill.empty) (_ + _)) // using foldLeft to support collections of one.
+        .mapValues(_.foldLeft(Bill.empty) (_ + _))
 
-      logger.debug("Obtaining the caller with the highest total call duration...")
-      val (callerWithGreatestDuration, callerBill) = callerToBill
+      logger.debug("Obtaining the highest total call duration...")
+      val (_, billWithHighestDuration) = callerToBill
         .maxBy { case (_, bill) => bill.duration }
-      logger.debug(s"${callerWithGreatestDuration.phoneNumber} will not be charged $callerBill.")
 
-      // Removing the caller with the highest total call duration so that he is not charged.
-      logger.info("Creating the final bill...")
-      (callerToBill - callerWithGreatestDuration)
-        .values
+      logger.debug(s"Contacts with duration of ${billWithHighestDuration.duration} will not pay.")
+      callerToBill.values
+        .filter { bill => bill.duration != billWithHighestDuration.duration }
         .foldLeft(Bill.empty)(_ + _)
     }
 }
