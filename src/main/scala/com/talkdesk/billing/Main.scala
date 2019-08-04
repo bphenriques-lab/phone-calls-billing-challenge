@@ -30,7 +30,7 @@ object Main extends App with Application with LazyLogging {
   val statusCode = process(filename) match {
     case Success(_) => 0
     case Failure(exception) =>
-      logger.error(s"Error reading file $filename.", exception)
+      logger.error(s"Error billing file $filename.", exception)
       -1
   }
 

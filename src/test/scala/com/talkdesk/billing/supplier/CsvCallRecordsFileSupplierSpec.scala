@@ -5,6 +5,7 @@
 package com.talkdesk.billing.supplier
 
 import java.io.File
+import java.nio.file.Files
 
 import com.talkdesk._
 import com.talkdesk.billing.model.{CallRecord, Contact}
@@ -58,6 +59,18 @@ class CsvCallRecordsFileSupplierSpec extends BaseSpec {
       CallRecord(localDataTimeAt(9, 11, 30), localDataTimeAt(9, 15, 22), Contact("+351914374373"), Contact("+351215355312")),
       CallRecord(localDataTimeAt(15, 20, 4), localDataTimeAt(15, 23,49), Contact("+351217538222"), Contact("+351214434422")),
       CallRecord(localDataTimeAt(16, 43, 2), localDataTimeAt(16, 50, 20), Contact("+351217235554"), Contact("+351329932233")),
+      CallRecord(localDataTimeAt(17, 44, 4), localDataTimeAt(17, 49, 30), Contact("+351914374373"), Contact("+351963433432")),
+    )
+
+    readRecords shouldEqual Success(expectedRecords)
+  }
+
+  it must "when not validating the file, it should return all valid lines" in {
+    val readRecords = SkipInvalidLinesRecordsSupplier.from(getInvalidResource("invalid-to-contact.csv"))
+
+    val expectedRecords = Stream(
+      CallRecord(localDataTimeAt(9, 11, 30), localDataTimeAt(9, 15, 22), Contact("+351914374373"), Contact("+351215355312")),
+      CallRecord(localDataTimeAt(15, 20, 4), localDataTimeAt(15, 23,49), Contact("+351217538222"), Contact("+351214434422")),
       CallRecord(localDataTimeAt(17, 44, 4), localDataTimeAt(17, 49, 30), Contact("+351914374373"), Contact("+351963433432")),
     )
 

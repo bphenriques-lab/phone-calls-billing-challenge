@@ -11,8 +11,9 @@ import java.time.{LocalDate, LocalDateTime, LocalTime}
 import com.talkdesk.billing.exception.BillingException
 import com.talkdesk.billing.model.{CallRecord, Contact}
 import com.talkdesk.billing.supplier.CallRecordsFileSupplier
+import com.typesafe.scalalogging.LazyLogging
 
-import scala.util.Try
+import scala.util.{Failure, Success, Try}
 
 /**
   * Provides a stream of [[com.talkdesk.billing.model.CallRecord]] from a CSV file in the following format:
@@ -28,7 +29,9 @@ import scala.util.Try
   * @author Bruno Henriques (brunoaphenriques@gmail.com)
   * @version 1.0.0-SNAPSHOT
   */
-final class CSVCallRecordsFileSupplier(config: CSVCallRecordsFileSupplierConfig) extends CallRecordsFileSupplier {
+final class CSVCallRecordsFileSupplier(
+  config: CSVCallRecordsFileSupplierConfig
+) extends CallRecordsFileSupplier with LazyLogging {
 
   /**
     * The timestamp format of `time_of_start` and `time_of_finish`.
@@ -83,12 +86,21 @@ final class CSVCallRecordsFileSupplier(config: CSVCallRecordsFileSupplierConfig)
       */
     def reader(): CsvReader[ReadResult[CallRecord]] = file.asCsvReader[CallRecord](csvConfiguration)
 
-    // Stream the file once to check for any errors. If no errors are found, return a new stream.
-    // This leads to iterating the file twice, however for this use-case, it is cleaner than returning
-    // Seq[Try[CallRecord]] that requires checking for errors line-by-line downstream.
-    reader().toStream.collectFirst { case Left(error) => error } match {
-      case Some(readError) => throw BillingException("Error decoding file.", readError)
-      case _               => reader().toStream.map(_.right.get)
+    if (config.validateFile) {
+      // Stream the file once to check for any errors. If no errors are found, return a new stream.
+      reader().toStream.collectFirst { case Left(error) => error } match {
+        case Some(readError) => throw BillingException("Error decoding file.", readError)
+        case _               => reader().toStream.map(_.right.get)
+      }
+    } else {
+      // Stream the file only once and log any line that is not correct.
+      reader().toStream.map {
+        case Right(record) => Success(record)
+        case Left(error) =>
+          val ex = BillingException("Error decoding line.", error)
+          logger.error(ex.message)
+          Failure(ex)
+      }.filter(_.isSuccess).map(_.get)
     }
   }
 }

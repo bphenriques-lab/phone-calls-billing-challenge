@@ -31,6 +31,13 @@ class BaseSpec extends FlatSpec with Matchers {
   )
 
   /**
+    * [[com.talkdesk.billing.supplier.CallRecordsFileSupplier]] that ignores invalid lines.
+    */
+  val SkipInvalidLinesRecordsSupplier: CallRecordsFileSupplier = CSVCallRecordsFileSupplier.fromConfig(
+    CSVCallRecordsFileSupplierConfig.Default.copy(validateFile = false)
+  )
+
+  /**
     * Reference date to construct instances of [[LocalDateTime]].
     */
   val ReferenceDate: LocalDate = LocalDate.of(2019, 1, 1)

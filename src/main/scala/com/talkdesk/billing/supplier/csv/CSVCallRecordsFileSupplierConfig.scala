@@ -17,7 +17,8 @@ import scala.util.Try
   */
 final case class CSVCallRecordsFileSupplierConfig(
   separator: Char,
-  header: Boolean
+  header: Boolean,
+  validateFile: Boolean
 )
 
 /**
@@ -35,13 +36,15 @@ object CSVCallRecordsFileSupplierConfig {
   implicit def fromConfig(conf: Config): Try[CSVCallRecordsFileSupplierConfig] = for {
     separator <- Try(conf.getChar("separator"))
     header <- Try(conf.getBoolean("header"))
-  } yield CSVCallRecordsFileSupplierConfig(separator, header)
+    validateFile <- Try(conf.getBoolean("validate-file"))
+  } yield CSVCallRecordsFileSupplierConfig(separator, header, validateFile)
 
   /**
     * Default configuration.
     */
   val Default: CSVCallRecordsFileSupplierConfig = CSVCallRecordsFileSupplierConfig(
     separator = ';',
-    header    = false
+    header    = false,
+    validateFile = true
   )
 }
