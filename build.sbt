@@ -6,7 +6,7 @@ ThisBuild / organization     := "com.example"
 ThisBuild / name             := "billing"
 ThisBuild / version          := "0.1.0-SNAPSHOT"
 ThisBuild / organizationName := "example"
-ThisBuild / maintainer       := "brunoaphenriques@gmail.com"
+ThisBuild / maintainer       := "bphenriques@outlook.com"
 
 // Name of simulator configuration file.
 lazy val BillingConfigurationFile = "application.conf"
@@ -33,7 +33,7 @@ lazy val root = (project in file("."))
 import NativePackagerHelper._
 lazy val packagingSettings = Seq(
   // Set main class.
-  mainClass in Compile := Some("com.talkdesk.billing.Main"),
+  mainClass in Compile := Some("com.bphenriques.billing.Main"),
 
   // Skip javadoc.jar build (https://github.com/sbt/sbt-native-packager/issues/651).
   mappings in (Compile, packageDoc) := Seq(),

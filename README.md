@@ -1,42 +1,56 @@
-# Talkdesk Billing
+Challenge made in 2017.
 
-Displays the cost of a set of call records stored in a file.
+Some thoughts in 2020:
+- Good that I went light on dependencies.
+- Liked the way I approved acceptance tests.
+- Too many docs. Unnecessary as the code is self-explanatory (as it should be).
+- Good abstractions as they are composable but not necessary in the scope of this challenge.
+- Licence?
+---
 
-## How to run
+# Goal
 
-To run the application use the following command in the application's folder:
+Given a list of calls with the following format:
 
-```bash
-$ bin/billing <path-to-file>
+    time_of_start;time_of_finish;call_from;call_to
+
+And the following rules:
+
+ - The first 5 minutes of each call are billed at 5 cents per minute
+ - The remainer of the call is billed at 2 cents per minute
+ - The caller with the highest total call duration of the day will not be charged (i.e., the caller that has the highest total call duration among all of its calls)
+
+Calculate the total cost for these calls.
+
+## Additional Notes
+
+* A call between `23:59:00` and `01:00:00` means that the call lasted 2 minutes.
+* Both `time_of_start` and `time_of_finish` are in the same timezone.
+* The following phone numbers are considered different: `+351911234567`, `00351911234567`, and `911234567`.
+
+# Example
+
+Input:
 ```
-
-Replace `<path-to-file>` with the path to a file in the following [format](#file-format).
-
-### File format
-
-The file **must** have the following format:
-```csv
-time_of_start;time_of_finish;call_from;call_to
-```
-
-Where:
-* `time_of_start`: When the call started in the format `HH:mm:ss`.
-* `time_of_finish`: When the call ended in the format `HH:mm:ss`.
-* `call_from`: Who started the call.
-* `call_to`: To whom `call_from` is calling.
-
-For example, consider the following `sample.csv` file:
-```csv
 09:11:30;09:15:22;+351914374373;+351215355312
 15:20:04;15:23:49;+351217538222;+351214434422
 16:43:02;16:50:20;+351217235554;+351329932233
 17:44:04;17:49:30;+351914374373;+351963433432
 ```
 
-**Note**:
-* A call between `23:59:00` and `01:00:00` means that the call lasted 2 minutes.
-* Both `time_of_start` and `time_of_finish` are in the same timezone.
-* The following phone numbers are considered different: `+351911234567`, `00351911234567`, and `911234567`.
+Output:
+``` 
+15.05
+``` 
+
+## Running
+
+
+```bash
+$ bin/billing <path-to-file>
+```
+
+Where `<path-to-file>` is the path to the file.
 
 ### Configuration
 
@@ -56,19 +70,4 @@ Where:
 * `csv`: The configuration object of the `CSV` reader.
   * `separator`: If the CSV file contains an header.
   * `header`: If the CSV file contains an header.
-
-
-## Billing 
-
-### Cost per Call
-
-| Duration of the call           | Cost Per Minute |
-|--------------------------------|-----------------|
-| First 5 minutes (0:00 to 4:59) | 0.05            |
-| Following minutes              | 0.02            |
-
-
-### Final Cost
-
-The caller with the highest total call duration of the day will not be charged, even if he is the only caller in that day.
 

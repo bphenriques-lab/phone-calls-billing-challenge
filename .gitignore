@@ -5,12 +5,3 @@ target/
 # Intellij
 .idea/
 *.iml
-
-# Mac
-.DS_Store
-
-# Vim temporary files
-*.swp
-*.swo
-*~
-
